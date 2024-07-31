@@ -3,11 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.34114.132
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "crud-blazor.Server", "crud-blazor\Server\crud-blazor.Server.csproj", "{FE0EDEC2-51AA-42C5-89C2-8AC435D65A35}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "crud-blazor.Server", "crud-blazor\Server\crud-blazor.Server.csproj", "{FE0EDEC2-51AA-42C5-89C2-8AC435D65A35}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "crud-blazor.Client", "crud-blazor\Client\crud-blazor.Client.csproj", "{1D5E1D19-863A-4809-86FF-1A18EDD955A7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "crud-blazor.Client", "crud-blazor\Client\crud-blazor.Client.csproj", "{1D5E1D19-863A-4809-86FF-1A18EDD955A7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "crud-blazor.Shared", "crud-blazor\Shared\crud-blazor.Shared.csproj", "{C9BFF36A-5067-469F-A5B3-57108D5A6106}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "crud-blazor.Shared", "crud-blazor\Shared\crud-blazor.Shared.csproj", "{C9BFF36A-5067-469F-A5B3-57108D5A6106}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -1,0 +1,58 @@
+﻿@page "/articles"
+@inject HttpClient Http
+
+<h3>Articles</h3>
+
+@if (articles == null)
+{
+    <p>Loading items...</p>
+}
+else if (articles.Length == 0)
+{
+    <p>No items</p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Name</th>
+                @*<th>Created Date</th>
+                <th>Updated Date</th>*@
+                <th>Category</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var article in articles)
+            {
+                <tr>
+                    <td>@article.Id</td>
+                    <td>@article.Name</td>
+                    @*<td>@article.CreatedDate.ToShortDateString()</td>
+                    <td>@(article.UpdatedDate != null? article.CreatedDate.ToShortDateString() : "-") </td>*@
+                    <td>@article.Category.Name</td>
+                    <td>
+                        <button class="btn btn-success"><span class="oi oi-pencil mr-2"></span>Edit</button>
+                        <button class="btn btn-danger"><span class="oi oi-delete mr-2"></span>Delete</button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    Article[] articles;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadArticles();
+    }
+
+    async Task LoadArticles()
+    {
+        articles = await Http.GetFromJsonAsync<Article[]>("Article");
+    }
+}

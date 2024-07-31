@@ -1,0 +1,51 @@
+﻿@page "/categories"
+@inject HttpClient Http
+
+<h3>Categories</h3>
+
+@if (categories == null)
+{
+    <p>Loading items...</p>
+}
+else if (categories.Length == 0)
+{
+    <p>No items</p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Name</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var category in categories)
+            {
+                <tr>
+                    <td>@category.Id</td>
+                    <td>@category.Name</td>
+                    <td>
+                        <button class="btn btn-danger"><span class="oi oi-delete mr-2"></span>Delete</button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    Category[] categories;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadCategories();
+    }
+
+    async Task LoadCategories()
+    {
+        categories = await Http.GetFromJsonAsync<Category[]>("Category");
+    }
+}

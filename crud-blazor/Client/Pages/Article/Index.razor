@@ -2,6 +2,9 @@
 @inject HttpClient Http
 
 <h3>Articles</h3>
+<a class="btn btn-primary" href="article-create"><span class="oi oi-plus mr-2"></span>Create</a>
+<br />
+<br />
 
 @if (articles == null)
 {
@@ -34,8 +37,8 @@ else
                     <td>@(article.UpdatedDate != null? article.CreatedDate.ToShortDateString() : "-") </td>*@
                     <td>@article.Category.Name</td>
                     <td>
-                        <button class="btn btn-success"><span class="oi oi-pencil mr-2"></span>Edit</button>
-                        <button class="btn btn-danger"><span class="oi oi-delete mr-2"></span>Delete</button>
+                        <a class="btn btn-success" href="article-edit/@article.Id"><span class="oi oi-pencil mr-2"></span>Edit</a>
+                        <button class="btn btn-danger" @onclick="@(()=>DeleteArticle(@article.Id))"><span class="oi oi-delete mr-2"></span>Delete</button>
                     </td>
                 </tr>
             }
@@ -54,5 +57,11 @@ else
     async Task LoadArticles()
     {
         articles = await Http.GetFromJsonAsync<Article[]>("Article");
+    }
+
+    async Task DeleteArticle(int id)
+    {
+        await Http.DeleteAsync($"Article/{id}");
+        await LoadArticles();
     }
 }

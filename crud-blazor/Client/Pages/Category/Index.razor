@@ -2,6 +2,9 @@
 @inject HttpClient Http
 
 <h3>Categories</h3>
+<a class="btn btn-primary" href="category-create"><span class="oi oi-plus mr-2"></span>Create</a>
+<br />
+<br />
 
 @if (categories == null)
 {
@@ -28,7 +31,7 @@ else
                     <td>@category.Id</td>
                     <td>@category.Name</td>
                     <td>
-                        <button class="btn btn-danger"><span class="oi oi-delete mr-2"></span>Delete</button>
+                        <button class="btn btn-danger" @onclick="@(()=>DeleteCategory(category.Id))"><span class="oi oi-delete mr-2"></span>Delete</button>
                     </td>
                 </tr>
             }
@@ -47,5 +50,11 @@ else
     async Task LoadCategories()
     {
         categories = await Http.GetFromJsonAsync<Category[]>("Category");
+    }
+
+    async Task DeleteCategory(int id)
+    {
+        await Http.DeleteAsync($"Category/{id}");
+        await LoadCategories();
     }
 }

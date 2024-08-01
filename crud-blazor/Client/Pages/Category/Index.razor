@@ -1,5 +1,6 @@
 ﻿@page "/categories"
 @inject HttpClient Http
+@inject SweetAlertService Swal
 
 <h3>Categories</h3>
 <a class="btn btn-primary" href="category-create"><span class="oi oi-plus mr-2"></span>Create</a>
@@ -54,7 +55,21 @@ else
 
     async Task DeleteCategory(int id)
     {
-        await Http.DeleteAsync($"Category/{id}");
-        await LoadCategories();
+        var c = await Http.GetFromJsonAsync<Category>($"Category/{id}");
+        var result = await Swal.FireAsync(new SweetAlertOptions()
+        {
+            Title = "Confirmar",
+            Text = $"¿Desea borrar el elemento \"{c.Name}\"?",
+            Icon = SweetAlertIcon.Warning,
+            ConfirmButtonText = "Sí",
+            CancelButtonText = "No",
+            ShowCancelButton = true
+        });
+
+        if (!string.IsNullOrEmpty(result.Value))
+        {
+            await Http.DeleteAsync($"Category/{id}");
+            await LoadCategories();
+        }
     }
 }

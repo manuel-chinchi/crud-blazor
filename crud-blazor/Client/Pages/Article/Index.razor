@@ -1,5 +1,6 @@
 ﻿@page "/articles"
 @inject HttpClient Http
+@inject SweetAlertService Swal
 
 <h3>Articles</h3>
 <a class="btn btn-primary" href="article-create"><span class="oi oi-plus mr-2"></span>Create</a>
@@ -61,7 +62,21 @@ else
 
     async Task DeleteArticle(int id)
     {
-        await Http.DeleteAsync($"Article/{id}");
-        await LoadArticles();
+        Article a = await Http.GetFromJsonAsync<Article>($"Article/{id}");
+        var result = await Swal.FireAsync(new SweetAlertOptions()
+        {
+            Title = "Confirmar",
+            Text = $"¿Desea borrar el elemento \"{a.Name}\"?",
+            Icon = SweetAlertIcon.Warning,
+            ConfirmButtonText = "Sí",
+            CancelButtonText = "No",
+            ShowCancelButton = true
+        });
+
+        if (!string.IsNullOrEmpty(result.Value))
+        {
+            await Http.DeleteAsync($"Article/{id}");
+            await LoadArticles();
+        }
     }
 }

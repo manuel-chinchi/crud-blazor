@@ -43,7 +43,7 @@
     {
         Category category = categories.Where(c => c.Id == Convert.ToInt32(CategoryId)).FirstOrDefault();
         article.Category = category;
-        await Http.PostAsJsonAsync("Article", article);
+        await Http.PutAsJsonAsync("Article", article);
         Navigation.NavigateTo("articles");
     }
 }

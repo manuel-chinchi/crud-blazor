@@ -11,16 +11,15 @@ namespace crud_blazor.Server.Controllers
     [Route("[controller]")]
     public class ArticleController : ControllerBase
     {
-        public static List<Article> Articles { get; set; }
+        public static List<Article> Articles { get; set; } = new List<Article>()
+            {
+                new Article(){Id=1,Name="a1",CreatedDate=new DateTime(1993,2,28), UpdatedDate=null, Category=new Category(){ Id=1, Name="c1"} },
+                new Article(){Id=2,Name="a2",CreatedDate=new DateTime(1993,2,28), UpdatedDate=null, Category=new Category() { Id=2, Name="c2"} },
+                new Article(){Id=3,Name="a3",CreatedDate=new DateTime(1993,2,28), UpdatedDate=null ,Category=new Category() {Id=3, Name="c3" } }
+            };
+
         public ArticleController()
         {
-            Category category = new Category() { Name = "c1" };
-            Articles = new List<Article>()
-            {
-                new Article(){Id=1,Name="a1",CreatedDate=new DateTime(1993,2,28), UpdatedDate=null, Category=category },
-                new Article(){Id=2,Name="a2",CreatedDate=new DateTime(1993,2,28), UpdatedDate=null, Category=category },
-                new Article(){Id=3,Name="a3",CreatedDate=new DateTime(1993,2,28), UpdatedDate=null ,Category=category}
-            };
         }
 
         [HttpGet]
@@ -33,6 +32,42 @@ namespace crud_blazor.Server.Controllers
         public Article Get(int id)
         {
             return Articles.FirstOrDefault(a => a.Id == id);
+        }
+
+        [HttpPost]
+        public void Post(Article article)
+        {
+            if (Articles.Count == 0)
+            {
+                article.Id = 1;
+                Articles.Add(article);
+            }
+            else
+            {
+            article.Id = (Articles.Max(a => a.Id) + 1);
+            Articles.Add(article);
+            }
+        }
+
+        [HttpPut]
+        public void Put(Article article)
+        {
+            var a = Articles.FirstOrDefault(a => a.Id == article.Id);
+            if (a != null)
+            {
+                a.Name = article.Name;
+                a.Category = article.Category;
+            }
+        }
+
+        [HttpDelete("{id}")]
+        public void Delete(int id)
+        {
+            var a = Articles.FirstOrDefault(a => a.Id == id);
+            if (a != null)
+            {
+                Articles.Remove(a);
+            }
         }
     }
 }

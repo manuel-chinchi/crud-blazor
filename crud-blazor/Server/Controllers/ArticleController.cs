@@ -13,9 +13,9 @@ namespace crud_blazor.Server.Controllers
     {
         public static List<Article> Articles { get; set; } = new List<Article>()
             {
-                new Article(){Id=1,Name="a1",CreatedDate=new DateTime(1993,2,28), UpdatedDate=null, Category=new Category(){ Id=1, Name="c1"} },
-                new Article(){Id=2,Name="a2",CreatedDate=new DateTime(1993,2,28), UpdatedDate=null, Category=new Category() { Id=2, Name="c2"} },
-                new Article(){Id=3,Name="a3",CreatedDate=new DateTime(1993,2,28), UpdatedDate=null ,Category=new Category() {Id=3, Name="c3" } }
+                new Article(){Id=1,Name="a1",CreatedDate=new DateTime(1993,2,28), UpdatedDate=null, Category=new Category(){ Id=1, Name="c1", CreatedDate = new DateTime(1993,2,28)} },
+                new Article(){Id=2,Name="a2",CreatedDate=new DateTime(1993,2,28), UpdatedDate=null, Category=new Category() { Id=2, Name="c2", CreatedDate = new DateTime(1993,2,28)} },
+                new Article(){Id=3,Name="a3",CreatedDate=new DateTime(1993,2,28), UpdatedDate=null ,Category=new Category() {Id=3, Name="c3", CreatedDate = new DateTime(1993,2,28) } }
             };
 
         public ArticleController()
@@ -40,11 +40,13 @@ namespace crud_blazor.Server.Controllers
             if (Articles.Count == 0)
             {
                 article.Id = 1;
+                article.CreatedDate = DateTime.Now;
                 Articles.Add(article);
             }
             else
             {
             article.Id = (Articles.Max(a => a.Id) + 1);
+                article.CreatedDate = DateTime.Now;
             Articles.Add(article);
             }
         }

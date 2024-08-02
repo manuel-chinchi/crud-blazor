@@ -13,9 +13,9 @@ namespace crud_blazor.Server.Controllers
     {
         public static List<Category> Categories { get; set; } = new List<Category>()
             {
-                new Category() {Id=1, Name="c1"},
-                new Category() {Id=2, Name="c2"},
-                new Category() {Id=3, Name="c3"}
+                new Category() {Id=1, Name="c1", CreatedDate = new DateTime(1993,2,28)},
+                new Category() {Id=2, Name="c2", CreatedDate=new DateTime(1993,2,28)},
+                new Category() {Id=3, Name="c3", CreatedDate=new DateTime(1993,2,28)}
             };
 
         public CategoryController()
@@ -40,12 +40,14 @@ namespace crud_blazor.Server.Controllers
             if (Categories.Count == 0)
             {
                 category.Id = 1;
+                category.CreatedDate = DateTime.Now;
                 Categories.Add(category);
             }
             else
             {
-            category.Id = (Categories.Max(c => c.Id) + 1);
-            Categories.Add(category);
+                category.Id = (Categories.Max(c => c.Id) + 1);
+                category.CreatedDate = DateTime.Now;
+                Categories.Add(category);
             }
         }
 

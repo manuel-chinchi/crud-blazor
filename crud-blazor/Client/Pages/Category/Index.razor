@@ -1,6 +1,11 @@
 ﻿@page "/categories"
+
+@using System.IO
+@using CsvHelper
+
 @inject HttpClient Http
 @inject SweetAlertService Swal
+@inject IJSRuntime JS
 
 <h3>Categories</h3>
 <a class="btn btn-primary" href="category-create"><span class="oi oi-plus mr-2"></span>Create</a>
@@ -46,9 +51,9 @@ else
         Export
     </button>
     <div class="dropdown-menu" aria-labelledby="dropdownMenu2">
-        <button class="dropdown-item" type="button">CSV</button>
-        <button class="dropdown-item" type="button">Excel</button>
-        <button class="dropdown-item" type="button">PDF</button>
+        <button class="dropdown-item" type="button" @onclick="ExportToCSV">CSV</button>
+        <button class="dropdown-item" type="button" disabled>Excel</button>
+        <button class="dropdown-item" type="button" disabled>PDF</button>
     </div>
 </div>
 
@@ -82,6 +87,24 @@ else
         {
             await Http.DeleteAsync($"Category/{id}");
             await LoadCategories();
+        }
+    }
+
+    void ExportToCSV()
+    {
+        using (var ms = new MemoryStream())
+        {
+            using (var sw = new StreamWriter(ms))
+            {
+                sw.WriteLine("sep=,"); // FIX only for MS Excel
+                using (var csv = new CsvWriter(sw, System.Globalization.CultureInfo.InvariantCulture))
+                {
+                    csv.WriteRecords(categories);
+                }
+
+                var array = ms.ToArray();
+                JS.InvokeAsync<object>("saveAsFile", "Categories.csv", array);
+            }
         }
     }
 }

@@ -47,6 +47,18 @@ else
     </table>
 }
 
+<div class="dropdown">
+    <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <span class="oi oi-data-transfer-download mr-2"></span>
+        Export
+    </button>
+    <div class="dropdown-menu" aria-labelledby="dropdownMenu2">
+        <button class="dropdown-item" type="button">CSV</button>
+        <button class="dropdown-item" type="button">Excel</button>
+        <button class="dropdown-item" type="button">PDF</button>
+    </div>
+</div>
+
 @code {
     Article[] articles;
 

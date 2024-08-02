@@ -58,10 +58,10 @@ else
         var c = await Http.GetFromJsonAsync<Category>($"Category/{id}");
         var result = await Swal.FireAsync(new SweetAlertOptions()
         {
-            Title = "Confirmar",
-            Text = $"¿Desea borrar el elemento \"{c.Name}\"?",
+            Title = "Confirm",
+            Text = $"Are you sure you want to delete the category \"{c.Name}\"?",
             Icon = SweetAlertIcon.Warning,
-            ConfirmButtonText = "Sí",
+            ConfirmButtonText = "Yes",
             CancelButtonText = "No",
             ShowCancelButton = true
         });

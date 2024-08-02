@@ -65,10 +65,10 @@ else
         Article a = await Http.GetFromJsonAsync<Article>($"Article/{id}");
         var result = await Swal.FireAsync(new SweetAlertOptions()
         {
-            Title = "Confirmar",
-            Text = $"¿Desea borrar el elemento \"{a.Name}\"?",
+            Title = "Confirm",
+            Text = $"Are you sure you want to delete the article \"{a.Name}\"?",
             Icon = SweetAlertIcon.Warning,
-            ConfirmButtonText = "Sí",
+            ConfirmButtonText = "Yes",
             CancelButtonText = "No",
             ShowCancelButton = true
         });

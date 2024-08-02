@@ -3,6 +3,9 @@
 @using System.IO
 @using CsvHelper
 @using CsvHelper.TypeConversion
+@using OfficeOpenXml
+@using OfficeOpenXml.Style
+@using System.Drawing
 
 @inject HttpClient Http
 @inject SweetAlertService Swal
@@ -53,7 +56,7 @@ else
     </button>
     <div class="dropdown-menu" aria-labelledby="dropdownMenu2">
         <button class="dropdown-item" type="button" @onclick="ExportToCSV">CSV</button>
-        <button class="dropdown-item" type="button" disabled>Excel</button>
+        <button class="dropdown-item" type="button" @onclick="ExportToExcel">Excel</button>
         <button class="dropdown-item" type="button" disabled>PDF</button>
     </div>
 </div>
@@ -109,6 +112,27 @@ else
                 var array = ms.ToArray();
                 JS.InvokeAsync<object>("saveAsFile", "Categories.csv", array);
             }
+        }
+    }
+
+    void ExportToExcel()
+    {
+        using (var package = new ExcelPackage())
+        {
+            var ws = package.Workbook.Worksheets.Add("Categories");
+
+            ws.Cells["A1"].Value = "Id";
+            ws.Cells["B1"].Value = "Name";
+            ws.Cells["C1"].Value = "Creation date";
+
+            ws.Column(3).Width = 15;
+
+            var body = ws.Cells["A2:A2"].LoadFromCollection(categories);
+            body.Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
+
+            ws.Cells["C:C"].Style.Numberformat.Format = "dd/mm/yyyy";
+
+            JS.InvokeAsync<object>("saveAsFile", "Categories.xlsx", package.GetAsByteArray());
         }
     }
 }

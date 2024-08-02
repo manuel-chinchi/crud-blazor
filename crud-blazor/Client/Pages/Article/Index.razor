@@ -4,6 +4,8 @@
 @using CsvHelper
 @using CsvHelper.Configuration
 @using CsvHelper.TypeConversion
+@using OfficeOpenXml
+@using OfficeOpenXml.Style
 
 @inject HttpClient Http
 @inject SweetAlertService Swal
@@ -61,13 +63,13 @@ else
     </button>
     <div class="dropdown-menu" aria-labelledby="dropdownMenu2">
         <button class="dropdown-item" type="button" @onclick="ExportToCSV">CSV</button>
-        <button class="dropdown-item" type="button" disabled>Excel</button>
+        <button class="dropdown-item" type="button" @onclick="ExportToExcel">Excel</button>
         <button class="dropdown-item" type="button" disabled>PDF</button>
     </div>
 </div>
 
 @code {
-        Article[] articles;
+    Article[] articles;
 
     protected override async Task OnInitializedAsync()
     {
@@ -133,7 +135,7 @@ else
                     csv.Context.RegisterClassMap<CategoryMap>();
 
                     // custom format for dates
-                    var opt = new TypeConverterOptions {Formats  =new[] { "dd/MM/yyyy"} };
+                    var opt = new TypeConverterOptions { Formats = new[] { "dd/MM/yyyy" } };
                     csv.Context.TypeConverterOptionsCache.AddOptions<DateTime>(opt);
 
                     csv.WriteRecords(articles);
@@ -142,6 +144,35 @@ else
                 var array = ms.ToArray();
                 JS.InvokeAsync<object>("saveAsFile", "Articles.csv", array);
             }
+        }
+    }
+
+    void ExportToExcel()
+    {
+        using (var package = new ExcelPackage())
+        {
+            var ws = package.Workbook.Worksheets.Add("Articles");
+
+            ws.Cells["A1"].Value = "Id";
+            ws.Cells["B1"].Value = "Name";
+            ws.Cells["C1"].Value = "Creation date";
+            ws.Cells["D1"].Value = "Category";
+
+            ws.Column(3).Width = 15;
+            ws.Column(4).Width = 20;
+
+            for (int i = 0; i < articles.Length; i++)
+            {
+                var item = articles[i];
+                ws.Cells[i + 2, 1].Value = item.Id;
+                ws.Cells[i + 2, 2].Value = item.Name;
+                ws.Cells[i + 2, 3].Value = item.CreatedDate.ToString("dd/MM/yyyy");
+                ws.Cells[i + 2, 4].Value = item.Category.Name;
+            }
+
+            ws.Cells["C:C"].Style.Numberformat.Format = "dd/mm/yyyy";
+
+            JS.InvokeAsync<object>("saveAsFile", "articles.xlsx", package.GetAsByteArray());
         }
     }
 }

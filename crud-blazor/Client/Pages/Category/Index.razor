@@ -2,6 +2,7 @@
 
 @using System.IO
 @using CsvHelper
+@using CsvHelper.TypeConversion
 
 @inject HttpClient Http
 @inject SweetAlertService Swal
@@ -99,6 +100,9 @@ else
                 sw.WriteLine("sep=,"); // FIX only for MS Excel
                 using (var csv = new CsvWriter(sw, System.Globalization.CultureInfo.InvariantCulture))
                 {
+                    var opt = new TypeConverterOptions { Formats = new[] { "dd/MM/yyyy" } };
+                    csv.Context.TypeConverterOptionsCache.AddOptions<DateTime>(opt);
+
                     csv.WriteRecords(categories);
                 }
 

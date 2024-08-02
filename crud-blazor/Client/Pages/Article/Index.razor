@@ -2,6 +2,8 @@
 
 @using System.IO
 @using CsvHelper
+@using CsvHelper.Configuration
+@using CsvHelper.TypeConversion
 
 @inject HttpClient Http
 @inject SweetAlertService Swal
@@ -28,7 +30,7 @@ else
                 <th>Id</th>
                 <th>Name</th>
                 @*<th>Created Date</th>
-                <th>Updated Date</th>*@
+                    <th>Updated Date</th>*@
                 <th>Category</th>
                 <th>Actions</th>
             </tr>
@@ -40,7 +42,7 @@ else
                     <td>@article.Id</td>
                     <td>@article.Name</td>
                     @*<td>@article.CreatedDate.ToShortDateString()</td>
-                    <td>@(article.UpdatedDate != null? article.CreatedDate.ToShortDateString() : "-") </td>*@
+                        <td>@(article.UpdatedDate != null? article.CreatedDate.ToShortDateString() : "-") </td>*@
                     <td>@article.Category.Name</td>
                     <td>
                         <a class="btn btn-success" href="article-edit/@article.Id"><span class="oi oi-pencil mr-2"></span>Edit</a>
@@ -65,7 +67,7 @@ else
 </div>
 
 @code {
-    Article[] articles;
+        Article[] articles;
 
     protected override async Task OnInitializedAsync()
     {
@@ -97,6 +99,25 @@ else
         }
     }
 
+    class ArticleMap : ClassMap<Article>
+    {
+        public ArticleMap()
+        {
+            Map(m => m.Id).Name("Id");
+            Map(m => m.Name).Name("Name");
+            Map(m => m.CreatedDate).Name("Creation date");
+            References<CategoryMap>(m => m.Category);
+        }
+    }
+
+    class CategoryMap : ClassMap<Category>
+    {
+        public CategoryMap()
+        {
+            Map(m => m.Name).Name("Category name");
+        }
+    }
+
     void ExportToCSV()
     {
         using (var ms = new MemoryStream())
@@ -104,8 +125,17 @@ else
             using (var sw = new StreamWriter(ms))
             {
                 sw.WriteLine("sep=,"); // FIX only for MS Excel
+
                 using (var csv = new CsvWriter(sw, System.Globalization.CultureInfo.InvariantCulture))
                 {
+                    // custom content mapping
+                    csv.Context.RegisterClassMap<ArticleMap>();
+                    csv.Context.RegisterClassMap<CategoryMap>();
+
+                    // custom format for dates
+                    var opt = new TypeConverterOptions {Formats  =new[] { "dd/MM/yyyy"} };
+                    csv.Context.TypeConverterOptionsCache.AddOptions<DateTime>(opt);
+
                     csv.WriteRecords(articles);
                 }
 

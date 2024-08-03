@@ -8,6 +8,7 @@
 @using iText.Kernel.Pdf
 @using iText.Layout
 @using iText.Layout.Element
+@using iText.Layout.Properties
 
 @inject HttpClient Http
 @inject SweetAlertService Swal
@@ -149,19 +150,26 @@ else
             Document document = new Document(pdf);
 
             // Add title
-            document.Add(new Paragraph("List of Categories"));
+            document.Add(new Paragraph("List of Categories").
+                SetTextAlignment(TextAlignment.CENTER).
+                SetFontSize(14));
+            document.Add(new Paragraph("\n"));
 
             // Add table
-            Table table = new Table(3);
-            table.AddHeaderCell("Id");
-            table.AddHeaderCell("Name");
-            table.AddHeaderCell("Creation Date");
+            float[] colWidths = { 7, 15, 10 };
+            //Table table = new Table(3);
+            Table table = new Table(UnitValue.CreatePercentArray(colWidths)).
+                SetHorizontalAlignment(HorizontalAlignment.CENTER);
+
+            table.AddHeaderCell("Id").SetTextAlignment(TextAlignment.CENTER);
+            table.AddHeaderCell("Name").SetTextAlignment(TextAlignment.CENTER);
+            table.AddHeaderCell("Creation Date").SetTextAlignment(TextAlignment.CENTER);
 
             foreach (var category in categories)
             {
-                table.AddCell(category.Id.ToString());
-                table.AddCell(category.Name);
-                table.AddCell(category.CreatedDate.ToString("dd/MM/yyyy"));
+                table.AddCell(new Cell().Add(new Paragraph(category.Id.ToString())).SetTextAlignment(TextAlignment.CENTER));
+                table.AddCell(new Cell().Add(new Paragraph(category.Name)).SetMaxWidth(15).SetTextAlignment(TextAlignment.CENTER));
+                table.AddCell(new Cell().Add(new Paragraph(category.CreatedDate.ToString("dd/MM/yyyy"))).SetTextAlignment(TextAlignment.CENTER));
             }
 
             document.Add(table);

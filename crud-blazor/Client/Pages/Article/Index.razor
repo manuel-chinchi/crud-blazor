@@ -8,6 +8,7 @@
 @using iText.Kernel.Pdf
 @using iText.Layout
 @using iText.Layout.Element
+@using iText.Layout.Properties
 
 @inject HttpClient Http
 @inject SweetAlertService Swal
@@ -184,21 +185,30 @@ else
             Document document = new Document(pdf);
 
             // Add title
-            document.Add(new Paragraph("List of Articles"));
+            //document.Add(new Paragraph("List of Articles"));
+            Paragraph title = new Paragraph("List of Articles").
+                SetTextAlignment(TextAlignment.CENTER).
+                SetFontSize(14);
+            document.Add(title);
+            document.Add(new Paragraph("\n"));
 
             // Add table
-            Table table = new Table(4);
-            table.AddHeaderCell("Id");
-            table.AddHeaderCell("Name");
-            table.AddHeaderCell("Creation Date");
-            table.AddHeaderCell("Category Name");
+            float[] colWidths = { 7, 15, 12, 15 }; //set 4 cols
+            Table table = new Table(UnitValue.CreatePercentArray(colWidths)).
+                //UseAllAvailableWidth().
+                SetHorizontalAlignment(HorizontalAlignment.CENTER);
+
+            table.AddHeaderCell("Id").SetTextAlignment(TextAlignment.CENTER);
+            table.AddHeaderCell("Name").SetTextAlignment(TextAlignment.CENTER);
+            table.AddHeaderCell("Creation Date").SetTextAlignment(TextAlignment.CENTER);
+            table.AddHeaderCell("Category Name").SetTextAlignment(TextAlignment.CENTER);
 
             foreach (var article in articles)
             {
-                table.AddCell(article.Id.ToString());
-                table.AddCell(article.Name);
-                table.AddCell(article.CreatedDate.ToString("dd/MM/yyyy"));
-                table.AddCell(article.Category.Name);
+                table.AddCell(new Cell().Add(new Paragraph( article.Id.ToString())).SetTextAlignment(TextAlignment.CENTER));
+                table.AddCell(new Cell().Add( new Paragraph(article.Name)).SetMaxWidth(15).SetTextAlignment(TextAlignment.CENTER));
+                table.AddCell(new Cell().Add(  new Paragraph(article.CreatedDate.ToString("dd/MM/yyyy")  )).SetTextAlignment(TextAlignment.CENTER));
+                table.AddCell(new Cell().Add(new Paragraph(article.Category.Name)).SetMaxWidth(15).SetTextAlignment(TextAlignment.CENTER));
             }
 
             document.Add(table);

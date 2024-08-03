@@ -5,6 +5,9 @@
 @using CsvHelper.TypeConversion
 @using OfficeOpenXml
 @using OfficeOpenXml.Style
+@using iText.Kernel.Pdf
+@using iText.Layout
+@using iText.Layout.Element
 
 @inject HttpClient Http
 @inject SweetAlertService Swal
@@ -56,12 +59,12 @@ else
     <div class="dropdown-menu" aria-labelledby="dropdownMenu2">
         <button class="dropdown-item" type="button" @onclick="ExportToCSV">CSV</button>
         <button class="dropdown-item" type="button" @onclick="ExportToExcel">Excel</button>
-        <button class="dropdown-item" type="button" disabled>PDF</button>
+        <button class="dropdown-item" type="button" @onclick="ExportToPDF">PDF</button>
     </div>
 </div>
 
 @code {
-    Category[] categories;
+    public Category[] categories;
 
     protected override async Task OnInitializedAsync()
     {
@@ -133,5 +136,43 @@ else
 
             JS.InvokeAsync<object>("saveAsFile", "Categories.xlsx", package.GetAsByteArray());
         }
+    }
+
+    byte[] GetContentToByteArray()
+    {
+        List<Category> categories = this.categories.ToList();
+
+        using (MemoryStream stream = new MemoryStream())
+        {
+            PdfWriter writer = new PdfWriter(stream);
+            PdfDocument pdf = new PdfDocument(writer);
+            Document document = new Document(pdf);
+
+            // Add title
+            document.Add(new Paragraph("List of Categories"));
+
+            // Add table
+            Table table = new Table(3);
+            table.AddHeaderCell("Id");
+            table.AddHeaderCell("Name");
+            table.AddHeaderCell("Creation Date");
+
+            foreach (var category in categories)
+            {
+                table.AddCell(category.Id.ToString());
+                table.AddCell(category.Name);
+                table.AddCell(category.CreatedDate.ToString("dd/MM/yyyy"));
+            }
+
+            document.Add(table);
+            document.Close();
+
+            return stream.ToArray();
+        }
+    }
+
+    void ExportToPDF()
+    {
+        JS.InvokeAsync<object>("saveAsFile", "Categories.pdf", GetContentToByteArray());
     }
 }

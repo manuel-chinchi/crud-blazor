@@ -5,6 +5,9 @@
 @using CsvHelper.Configuration
 @using CsvHelper.TypeConversion
 @using OfficeOpenXml
+@using iText.Kernel.Pdf
+@using iText.Layout
+@using iText.Layout.Element
 
 @inject HttpClient Http
 @inject SweetAlertService Swal
@@ -30,8 +33,6 @@ else
             <tr>
                 <th>Id</th>
                 <th>Name</th>
-                @*<th>Created Date</th>
-                    <th>Updated Date</th>*@
                 <th>Category</th>
                 <th>Actions</th>
             </tr>
@@ -42,8 +43,6 @@ else
                 <tr>
                     <td>@article.Id</td>
                     <td>@article.Name</td>
-                    @*<td>@article.CreatedDate.ToShortDateString()</td>
-                        <td>@(article.UpdatedDate != null? article.CreatedDate.ToShortDateString() : "-") </td>*@
                     <td>@article.Category.Name</td>
                     <td>
                         <a class="btn btn-success" href="article-edit/@article.Id"><span class="oi oi-pencil mr-2"></span>Edit</a>
@@ -63,7 +62,7 @@ else
     <div class="dropdown-menu" aria-labelledby="dropdownMenu2">
         <button class="dropdown-item" type="button" @onclick="ExportToCSV">CSV</button>
         <button class="dropdown-item" type="button" @onclick="ExportToExcel">Excel</button>
-        <button class="dropdown-item" type="button" disabled>PDF</button>
+        <button class="dropdown-item" type="button" @onclick="ExportToPDF">PDF</button>
     </div>
 </div>
 
@@ -173,5 +172,44 @@ else
 
             JS.InvokeAsync<object>("saveAsFile", "articles.xlsx", package.GetAsByteArray());
         }
+    }
+
+    byte[] GetContentToByteArray()
+    {
+        List<Article> articles = this.articles.ToList();
+        using (MemoryStream stream = new MemoryStream())
+        {
+            PdfWriter writer = new PdfWriter(stream);
+            PdfDocument pdf = new PdfDocument(writer);
+            Document document = new Document(pdf);
+
+            // Add title
+            document.Add(new Paragraph("List of Categories"));
+
+            // Add table
+            Table table = new Table(4);
+            table.AddHeaderCell("Id");
+            table.AddHeaderCell("Name");
+            table.AddHeaderCell("Creation Date");
+            table.AddHeaderCell("Category Name");
+
+            foreach (var article in articles)
+            {
+                table.AddCell(article.Id.ToString());
+                table.AddCell(article.Name);
+                table.AddCell(article.CreatedDate.ToString("dd/MM/yyyy"));
+                table.AddCell(article.Category.Name);
+            }
+
+            document.Add(table);
+            document.Close();
+
+            return stream.ToArray();
+        }
+    }
+
+    void ExportToPDF()
+    {
+        JS.InvokeAsync<object>("saveAsFile", "Articles.pdf", GetContentToByteArray());
     }
 }

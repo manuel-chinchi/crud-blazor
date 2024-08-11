@@ -1,15 +1,5 @@
 ﻿@page "/articles"
 
-@using System.IO
-@using CsvHelper
-@using CsvHelper.Configuration
-@using CsvHelper.TypeConversion
-@using OfficeOpenXml
-@using iText.Kernel.Pdf
-@using iText.Layout
-@using iText.Layout.Element
-@using iText.Layout.Properties
-
 @inject HttpClient Http
 @inject SweetAlertService Swal
 @inject IJSRuntime JS
@@ -100,126 +90,33 @@ else
         }
     }
 
-    class ArticleMap : ClassMap<Article>
+    async void ExportToCSV()
     {
-        public ArticleMap()
+        var response = await Http.PostAsJsonAsync<Article[]>("export/articles/csv", articles);
+        if (response.IsSuccessStatusCode)
         {
-            Map(m => m.Id).Name("Id");
-            Map(m => m.Name).Name("Name");
-            Map(m => m.CreatedDate).Name("Creation date");
-            References<CategoryMap>(m => m.Category);
+            var bytes = await response.Content.ReadAsByteArrayAsync();
+            await JS.InvokeAsync<object>("saveAsFile", "Articles.csv", bytes);
         }
     }
 
-    class CategoryMap : ClassMap<Category>
+    async void ExportToExcel()
     {
-        public CategoryMap()
+        var result = await Http.PostAsJsonAsync<Article[]>("export/articles/excel", articles);
+        if (result.IsSuccessStatusCode)
         {
-            Map(m => m.Name).Name("Category name");
+            var bytes = await result.Content.ReadAsByteArrayAsync();
+            await JS.InvokeAsync<object>("saveAsFile", "Articles.xlsx", bytes);
         }
     }
 
-    void ExportToCSV()
+    async void ExportToPDF()
     {
-        using (var ms = new MemoryStream())
+        var result = await Http.PostAsJsonAsync<Article[]>("export/articles/pdf", articles);
+        if (result.IsSuccessStatusCode)
         {
-            using (var sw = new StreamWriter(ms))
-            {
-                sw.WriteLine("sep=,"); // FIX only for MS Excel
-
-                using (var csv = new CsvWriter(sw, System.Globalization.CultureInfo.InvariantCulture))
-                {
-                    // custom content mapping
-                    csv.Context.RegisterClassMap<ArticleMap>();
-                    csv.Context.RegisterClassMap<CategoryMap>();
-
-                    // custom format for dates
-                    var opt = new TypeConverterOptions { Formats = new[] { "dd/MM/yyyy" } };
-                    csv.Context.TypeConverterOptionsCache.AddOptions<DateTime>(opt);
-
-                    csv.WriteRecords(articles);
-                }
-
-                var array = ms.ToArray();
-                JS.InvokeAsync<object>("saveAsFile", "Articles.csv", array);
-            }
+            var bytes = await result.Content.ReadAsByteArrayAsync();
+            await JS.InvokeAsync<object>("saveAsFile", "Articles.pdf", bytes);
         }
-    }
-
-    void ExportToExcel()
-    {
-        using (var package = new ExcelPackage())
-        {
-            var ws = package.Workbook.Worksheets.Add("Articles");
-
-            ws.Cells["A1"].Value = "Id";
-            ws.Cells["B1"].Value = "Name";
-            ws.Cells["C1"].Value = "Creation date";
-            ws.Cells["D1"].Value = "Category";
-
-            ws.Column(3).Width = 15;
-            ws.Column(4).Width = 20;
-
-            for (int i = 0; i < articles.Length; i++)
-            {
-                var item = articles[i];
-                ws.Cells[i + 2, 1].Value = item.Id;
-                ws.Cells[i + 2, 2].Value = item.Name;
-                ws.Cells[i + 2, 3].Value = item.CreatedDate.ToString("dd/MM/yyyy");
-                ws.Cells[i + 2, 4].Value = item.Category.Name;
-            }
-
-            ws.Cells["C:C"].Style.Numberformat.Format = "dd/mm/yyyy";
-
-            JS.InvokeAsync<object>("saveAsFile", "articles.xlsx", package.GetAsByteArray());
-        }
-    }
-
-    byte[] GetContentToByteArray()
-    {
-        List<Article> articles = this.articles.ToList();
-        using (MemoryStream stream = new MemoryStream())
-        {
-            PdfWriter writer = new PdfWriter(stream);
-            PdfDocument pdf = new PdfDocument(writer);
-            Document document = new Document(pdf);
-
-            // Add title
-            //document.Add(new Paragraph("List of Articles"));
-            Paragraph title = new Paragraph("List of Articles").
-                SetTextAlignment(TextAlignment.CENTER).
-                SetFontSize(14);
-            document.Add(title);
-            document.Add(new Paragraph("\n"));
-
-            // Add table
-            float[] colWidths = { 7, 15, 12, 15 }; //set 4 cols
-            Table table = new Table(UnitValue.CreatePercentArray(colWidths)).
-                //UseAllAvailableWidth().
-                SetHorizontalAlignment(HorizontalAlignment.CENTER);
-
-            table.AddHeaderCell("Id").SetTextAlignment(TextAlignment.CENTER);
-            table.AddHeaderCell("Name").SetTextAlignment(TextAlignment.CENTER);
-            table.AddHeaderCell("Creation Date").SetTextAlignment(TextAlignment.CENTER);
-            table.AddHeaderCell("Category Name").SetTextAlignment(TextAlignment.CENTER);
-
-            foreach (var article in articles)
-            {
-                table.AddCell(new Cell().Add(new Paragraph( article.Id.ToString())).SetTextAlignment(TextAlignment.CENTER));
-                table.AddCell(new Cell().Add( new Paragraph(article.Name)).SetMaxWidth(15).SetTextAlignment(TextAlignment.CENTER));
-                table.AddCell(new Cell().Add(  new Paragraph(article.CreatedDate.ToString("dd/MM/yyyy")  )).SetTextAlignment(TextAlignment.CENTER));
-                table.AddCell(new Cell().Add(new Paragraph(article.Category.Name)).SetMaxWidth(15).SetTextAlignment(TextAlignment.CENTER));
-            }
-
-            document.Add(table);
-            document.Close();
-
-            return stream.ToArray();
-        }
-    }
-
-    void ExportToPDF()
-    {
-        JS.InvokeAsync<object>("saveAsFile", "Articles.pdf", GetContentToByteArray());
     }
 }

@@ -1,15 +1,5 @@
 ﻿@page "/categories"
 
-@using System.IO
-@using CsvHelper
-@using CsvHelper.TypeConversion
-@using OfficeOpenXml
-@using OfficeOpenXml.Style
-@using iText.Kernel.Pdf
-@using iText.Layout
-@using iText.Layout.Element
-@using iText.Layout.Properties
-
 @inject HttpClient Http
 @inject SweetAlertService Swal
 @inject IJSRuntime JS
@@ -65,7 +55,7 @@ else
 </div>
 
 @code {
-    public Category[] categories;
+    Category[] categories;
 
     protected override async Task OnInitializedAsync()
     {
@@ -97,90 +87,33 @@ else
         }
     }
 
-    void ExportToCSV()
+    async void ExportToCSV()
     {
-        using (var ms = new MemoryStream())
+        var result = await Http.PostAsJsonAsync<Category[]>("export/categories/csv", categories);
+        if (result.IsSuccessStatusCode)
         {
-            using (var sw = new StreamWriter(ms))
-            {
-                sw.WriteLine("sep=,"); // FIX only for MS Excel
-                using (var csv = new CsvWriter(sw, System.Globalization.CultureInfo.InvariantCulture))
-                {
-                    var opt = new TypeConverterOptions { Formats = new[] { "dd/MM/yyyy" } };
-                    csv.Context.TypeConverterOptionsCache.AddOptions<DateTime>(opt);
-
-                    csv.WriteRecords(categories);
-                }
-
-                var array = ms.ToArray();
-                JS.InvokeAsync<object>("saveAsFile", "Categories.csv", array);
-            }
+            var bytes = await result.Content.ReadAsByteArrayAsync();
+            await JS.InvokeAsync<object>("saveAsFile", "Categories.csv", bytes);
         }
     }
 
-    void ExportToExcel()
+    async void ExportToExcel()
     {
-        using (var package = new ExcelPackage())
+        var result = await Http.PostAsJsonAsync<Category[]>("export/categories/excel", categories);
+        if (result.IsSuccessStatusCode)
         {
-            var ws = package.Workbook.Worksheets.Add("Categories");
-
-            ws.Cells["A1"].Value = "Id";
-            ws.Cells["B1"].Value = "Name";
-            ws.Cells["C1"].Value = "Creation date";
-
-            ws.Column(3).Width = 15;
-
-            var body = ws.Cells["A2:A2"].LoadFromCollection(categories);
-            body.Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
-
-            ws.Cells["C:C"].Style.Numberformat.Format = "dd/mm/yyyy";
-
-            JS.InvokeAsync<object>("saveAsFile", "Categories.xlsx", package.GetAsByteArray());
+            var bytes = await result.Content.ReadAsByteArrayAsync();
+            await JS.InvokeAsync<object>("saveAsFile", "Categories.xlsx", bytes);
         }
     }
 
-    byte[] GetContentToByteArray()
+    async void ExportToPDF()
     {
-        List<Category> categories = this.categories.ToList();
-
-        using (MemoryStream stream = new MemoryStream())
+        var result = await Http.PostAsJsonAsync<Category[]>("export/categories/pdf", categories);
+        if (result.IsSuccessStatusCode)
         {
-            PdfWriter writer = new PdfWriter(stream);
-            PdfDocument pdf = new PdfDocument(writer);
-            Document document = new Document(pdf);
-
-            // Add title
-            document.Add(new Paragraph("List of Categories").
-                SetTextAlignment(TextAlignment.CENTER).
-                SetFontSize(14));
-            document.Add(new Paragraph("\n"));
-
-            // Add table
-            float[] colWidths = { 7, 15, 10 };
-            //Table table = new Table(3);
-            Table table = new Table(UnitValue.CreatePercentArray(colWidths)).
-                SetHorizontalAlignment(HorizontalAlignment.CENTER);
-
-            table.AddHeaderCell("Id").SetTextAlignment(TextAlignment.CENTER);
-            table.AddHeaderCell("Name").SetTextAlignment(TextAlignment.CENTER);
-            table.AddHeaderCell("Creation Date").SetTextAlignment(TextAlignment.CENTER);
-
-            foreach (var category in categories)
-            {
-                table.AddCell(new Cell().Add(new Paragraph(category.Id.ToString())).SetTextAlignment(TextAlignment.CENTER));
-                table.AddCell(new Cell().Add(new Paragraph(category.Name)).SetMaxWidth(15).SetTextAlignment(TextAlignment.CENTER));
-                table.AddCell(new Cell().Add(new Paragraph(category.CreatedDate.ToString("dd/MM/yyyy"))).SetTextAlignment(TextAlignment.CENTER));
-            }
-
-            document.Add(table);
-            document.Close();
-
-            return stream.ToArray();
+            var bytes = await result.Content.ReadAsByteArrayAsync();
+            await JS.InvokeAsync<object>("saveAsFile", "Categories.pdf", bytes);
         }
-    }
-
-    void ExportToPDF()
-    {
-        JS.InvokeAsync<object>("saveAsFile", "Categories.pdf", GetContentToByteArray());
     }
 }

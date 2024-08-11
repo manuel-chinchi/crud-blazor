@@ -4,7 +4,7 @@
     <TargetFramework>netstandard2.1</TargetFramework>
     <RazorLangVersion>3.0</RazorLangVersion>
     <AssemblyName>$(AssemblyName.Replace(' ', '_'))</AssemblyName>
-    <RootNamespace>crud-blazor.Client</RootNamespace>
+    <RootNamespace>crud_blazor.Client</RootNamespace>
     <!--FIX: linker error-->
     <BlazorWebAssemblyEnableLinking>false</BlazorWebAssemblyEnableLinking>
   </PropertyGroup>

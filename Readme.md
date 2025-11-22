@@ -43,7 +43,7 @@ continuación.
 	La aplicación se nicia correctamente pero cuando ejecuto la acción de exportar
 	datos de alguna de las tablas a algún formato (CSV, Excel, PDF) se detiene. 
     
-    NO ENCONTRE HASTA AHORA ALGUNA RAZÓN APARENTE NI SOLUCIÓN PARA ESTO.
+    **NO SE ENCONTRO ALGUNA RAZÓN APARENTE NI SOLUCIÓN PARA ESTO**
 
 2. La aplicación no se inicia en Chrome o se detiene luego de un tiempo.
 	La aplicación no inicia, es decir, se abre el navegador pero no se redirecciona

@@ -5,6 +5,7 @@
 @inject IJSRuntime JS
 
 <h3>Articles</h3>
+<br />
 <a class="btn btn-primary" href="article-create"><span class="oi oi-plus mr-2"></span>Create</a>
 <br />
 <br />
@@ -19,13 +20,13 @@ else if (articles.Length == 0)
 }
 else
 {
-    <table class="table">
+    <table class="table table-striped table-bordered">
         <thead>
             <tr>
                 <th>Id</th>
                 <th>Name</th>
                 <th>Category</th>
-                <th>Actions</th>
+                <th class="text-center">Actions</th>
             </tr>
         </thead>
         <tbody>
@@ -35,7 +36,7 @@ else
                     <td>@article.Id</td>
                     <td>@article.Name</td>
                     <td>@article.Category.Name</td>
-                    <td>
+                    <td class="text-center">
                         <a class="btn btn-success" href="article-edit/@article.Id"><span class="oi oi-pencil mr-2"></span>Edit</a>
                         <button class="btn btn-danger" @onclick="@(()=>DeleteArticle(@article.Id))"><span class="oi oi-delete mr-2"></span>Delete</button>
                     </td>
@@ -78,8 +79,18 @@ else
             Title = "Confirm",
             Text = $"Are you sure you want to delete the article \"{a.Name}\"?",
             Icon = SweetAlertIcon.Warning,
-            ConfirmButtonText = "Yes",
-            CancelButtonText = "No",
+            //ConfirmButtonText = "Yes",
+            //CancelButtonText = "No",
+            ConfirmButtonText = @"
+                <div style=""min-width: 75px;"">
+                    <span style=""font-size: 18px; top: 2px;"" class='oi oi-check mr-2'></span>Yes
+                </div>
+            ",
+            CancelButtonText = @"
+                <div style=""min-width: 75px;"">
+                    <span class='oi oi-x mr-2'></span>No
+                </div>
+            ",
             ShowCancelButton = true
         });
 

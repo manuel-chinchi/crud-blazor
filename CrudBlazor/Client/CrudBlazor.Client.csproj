@@ -18,7 +18,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Shared\crud-blazor.Shared.csproj" />
+    <ProjectReference Include="..\Shared\CrudBlazor.Shared.csproj" />
   </ItemGroup>
 
 </Project>

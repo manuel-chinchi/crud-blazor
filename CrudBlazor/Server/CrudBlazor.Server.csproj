@@ -15,9 +15,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Client\crud-blazor.Client.csproj" />
-    <ProjectReference Include="..\Shared\crud-blazor.Shared.csproj" />
+    <ProjectReference Include="..\Client\CrudBlazor.Client.csproj" />
+    <ProjectReference Include="..\Shared\CrudBlazor.Shared.csproj" />
   </ItemGroup>
+
+  <ProjectExtensions><VisualStudio><UserProperties properties_4launchsettings_1json__JsonSchema="" /></VisualStudio></ProjectExtensions>
 
 
 </Project>

@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.1</TargetFramework>
-    <RootNamespace>crud_blazor.Shared</RootNamespace>
+    <RootNamespace>CrudBlazor.Shared</RootNamespace>
   </PropertyGroup>
 
 </Project>

@@ -41,8 +41,9 @@ continuación.
 
 1. La aplicación se detiene al ejecutarse en Brave.
 	La aplicación se nicia correctamente pero cuando ejecuto la acción de exportar
-	datos de alguna de las tablas a algún formato (CSV, Excel, PDF) se detiene. No
-	encontre hasta ahora alguna razón aparente.
+	datos de alguna de las tablas a algún formato (CSV, Excel, PDF) se detiene. 
+    
+    NO ENCONTRE HASTA AHORA ALGUNA RAZÓN APARENTE NI SOLUCIÓN PARA ESTO.
 
 2. La aplicación no se inicia en Chrome o se detiene luego de un tiempo.
 	La aplicación no inicia, es decir, se abre el navegador pero no se redirecciona

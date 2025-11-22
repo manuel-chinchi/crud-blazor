@@ -102,7 +102,7 @@ las carpetas `/bin` y `/obj` si es necesario de todos los proyectos de la soluci
           "environmentVariables": {
             "ASPNETCORE_ENVIRONMENT": "Development"
           },
-          "inspectUri": "{wsProtocol}://{url.hostname}:{url.port}/_framework/debug/ws-proxy?browser={browserInspectUri}"
+          //"inspectUri": "{wsProtocol}://{url.hostname}:{url.port}/_framework/debug/ws-proxy?browser={browserInspectUri}"
         },
         "crud-blazor.Server": {
           "commandName": "Project",
@@ -111,11 +111,22 @@ las carpetas `/bin` y `/obj` si es necesario de todos los proyectos de la soluci
             "ASPNETCORE_ENVIRONMENT": "Development"
           },
           "applicationUrl": "https://localhost:5001;http://localhost:5000",
-          "inspectUri": "{wsProtocol}://{url.hostname}:{url.port}/_framework/debug/ws-proxy?browser={browserInspectUri}"
+          //"inspectUri": "{wsProtocol}://{url.hostname}:{url.port}/_framework/debug/ws-proxy?browser={browserInspectUri}"
         }
       }
     }
     ```
+
+    Esta configuración lo que hace es deshabilitar la depuracion de JavaScript/WebAssembly 
+    en Blazor, es decir. Con esto se pierde la capacidad de poner breakpoints en archivos 
+    .razor, clases en proyecto *.Client
+
+**NOTA:** Este problema parece ser algo relacionado a Chrome en particular sobre todo
+para las versiones modernas. Queda descartado (al menos según mis pruebas) que tenga que
+ver con el uso de guíon medio "-" en el nombre de los proyectos ya que hice la prueba 
+cambiando "crud-blazor..*" a "CruBlazor..*" y no hubo diferencias. Tal vez tenga que ver
+con la versión de Net Core 3.1 usada en la solución. TENER EN CUENTA SI SE USA COMO TEMPLATE
+PARA OTROS PROYECTOS
 
 ### Referencias
 - [The Visual Studio 2022 Error "Failed to launch debug adapter. Additional information may be available in the output window."](https://stackoverflow.com/questions/70374907/the-visual-studio-2022-error-failed-to-launch-debug-adapter-additional-informa/78177525#78177525)

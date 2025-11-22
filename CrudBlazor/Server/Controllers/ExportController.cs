@@ -1,4 +1,4 @@
-﻿using crud_blazor.Shared.Models;
+﻿using CrudBlazor.Shared.Models;
 using CsvHelper;
 using CsvHelper.Configuration;
 using CsvHelper.TypeConversion;
@@ -15,7 +15,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace crud_blazor.Server.Controllers
+namespace CrudBlazor.Server.Controllers
 {
     [ApiController]
     [Route("[controller]")]

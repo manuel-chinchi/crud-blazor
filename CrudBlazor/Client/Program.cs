@@ -9,7 +9,7 @@ using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace crud_blazor.Client
+namespace CrudBlazor.Client
 {
     public class Program
     {

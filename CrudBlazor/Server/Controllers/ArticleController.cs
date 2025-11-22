@@ -1,11 +1,11 @@
-﻿using crud_blazor.Shared.Models;
+﻿using CrudBlazor.Shared.Models;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace crud_blazor.Server.Controllers
+namespace CrudBlazor.Server.Controllers
 {
     [ApiController]
     [Route("[controller]")]

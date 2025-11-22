@@ -7,7 +7,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System.Linq;
 
-namespace crud_blazor.Server
+namespace CrudBlazor.Server
 {
     public class Startup
     {

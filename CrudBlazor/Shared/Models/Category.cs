@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace crud_blazor.Shared.Models
+namespace CrudBlazor.Shared.Models
 {
     public class Category
     {

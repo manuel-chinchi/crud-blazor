@@ -29,7 +29,7 @@ componentes:
 
 ## Referencias
 
-- [unable to bind object to blazer <InputSelect>](https://github.com/dotnet/aspnetcore/issues/26685)
+- [unable to bind object to blazer \<InputSelect\>](https://github.com/dotnet/aspnetcore/issues/26685)
 - [Binding select element with database data in Blazor](https://www.pragimtech.com/blog/blazor/blazor-select-bind-database-data/)
 - [Bootstrap Dropdowns](https://www.w3schools.com/bootstrap/bootstrap_dropdowns.asp)
 - [csvhelper everything get written in one column in Excel](https://stackoverflow.com/questions/48647247/csvhelper-everything-get-written-in-one-column-in-excel)

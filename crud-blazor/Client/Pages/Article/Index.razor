@@ -6,8 +6,24 @@
 
 <h3>Articles</h3>
 <br />
-<a class="btn btn-primary" href="article-create"><span class="oi oi-plus mr-2"></span>Create</a>
-<br />
+<div class="btn-toolbar justify-content-between" role="toolbar">
+    <div class="btn-group" role="group">
+        <a class="btn btn-primary" href="article-create"><span class="oi oi-plus mr-2"></span>Create</a>
+    </div>
+    <div class="btn-group" role="group">
+        <div class="dropdown">
+            <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <span class="oi oi-data-transfer-download mr-2"></span>
+                Export
+            </button>
+            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenu2">
+                <button class="dropdown-item" type="button" @onclick="ExportToCSV">CSV</button>
+                <button class="dropdown-item" type="button" @onclick="ExportToExcel">Excel</button>
+                <button class="dropdown-item" type="button" @onclick="ExportToPDF">PDF</button>
+            </div>
+        </div>
+    </div>
+</div>
 <br />
 
 @if (articles == null)
@@ -46,17 +62,7 @@ else
     </table>
 }
 
-<div class="dropdown">
-    <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-        <span class="oi oi-data-transfer-download mr-2"></span>
-        Export
-    </button>
-    <div class="dropdown-menu" aria-labelledby="dropdownMenu2">
-        <button class="dropdown-item" type="button" @onclick="ExportToCSV">CSV</button>
-        <button class="dropdown-item" type="button" @onclick="ExportToExcel">Excel</button>
-        <button class="dropdown-item" type="button" @onclick="ExportToPDF">PDF</button>
-    </div>
-</div>
+
 
 @code {
     Article[] articles;

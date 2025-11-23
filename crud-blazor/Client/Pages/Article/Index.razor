@@ -87,33 +87,45 @@ else
         }
     }
 
+    async Task<string> GetTimeStamp()
+    {
+        var timestamp = await JS.InvokeAsync<string>("getLocalTimestamp");
+        return timestamp;
+    }
+
     async void ExportToCSV()
     {
         var response = await Http.PostAsJsonAsync<Article[]>("export/articles/csv", articles);
+        var timestamp = await GetTimeStamp();
+
         if (response.IsSuccessStatusCode)
         {
             var bytes = await response.Content.ReadAsByteArrayAsync();
-            await JS.InvokeAsync<object>("saveAsFile", "Articles.csv", bytes);
+            await JS.InvokeAsync<object>("saveAsFile", $"Articles_{timestamp}.csv", bytes);
         }
     }
 
     async void ExportToExcel()
     {
         var result = await Http.PostAsJsonAsync<Article[]>("export/articles/excel", articles);
+        var timestamp = await GetTimeStamp();
+
         if (result.IsSuccessStatusCode)
         {
             var bytes = await result.Content.ReadAsByteArrayAsync();
-            await JS.InvokeAsync<object>("saveAsFile", "Articles.xlsx", bytes);
+            await JS.InvokeAsync<object>("saveAsFile", $"Articles_{timestamp}.xlsx", bytes);
         }
     }
 
     async void ExportToPDF()
     {
         var result = await Http.PostAsJsonAsync<Article[]>("export/articles/pdf", articles);
+        var timestamp = await GetTimeStamp();
+
         if (result.IsSuccessStatusCode)
         {
             var bytes = await result.Content.ReadAsByteArrayAsync();
-            await JS.InvokeAsync<object>("saveAsFile", "Articles.pdf", bytes);
+            await JS.InvokeAsync<object>("saveAsFile", $"Articles_{timestamp}.pdf", bytes);
         }
     }
 }

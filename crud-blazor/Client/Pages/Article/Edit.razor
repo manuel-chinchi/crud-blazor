@@ -2,7 +2,8 @@
 @inject HttpClient Http
 @inject NavigationManager Navigation
 
-<h3>Edit</h3>
+<h3>Edit article</h3>
+<br />
 
 <EditForm Model="article" OnValidSubmit="SaveArticle">
     <div class="form-group">
@@ -21,7 +22,9 @@
             }
         </InputSelect>
     </div>
-    <button type="submit" class="btn btn-success"><span class="oi oi-chevron-right mr-2"></span>Save</button>
+    <br />
+    <a class="btn btn-secondary" href="articles"><span class="oi oi-chevron-left mr-2"></span>Back</a>
+    <button type="submit" class="btn btn-success"><span class="oi oi-check mr-2"></span>Save</button>
 </EditForm>
 
 @code {

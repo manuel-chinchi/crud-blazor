@@ -145,3 +145,4 @@ PARA OTROS PROYECTOS
 - [Error: The type or namespace name 'ExcelPackage' could not be found](https://stackoverflow.com/questions/13819962/error-the-type-or-namespace-name-excelpackage-could-not-be-found)
 - [System.Text.Json version conflict](https://stackoverflow.com/questions/65794381/system-text-json-version-conflict)
 - [How do I resolve Unknown PdfException when using itext7 in. net maui](https://stackoverflow.com/questions/76260218/how-do-i-resolve-unknown-pdfexception-when-using-itext7-in-net-maui)
+- [Open Iconic List](https://fortawesome.com/sets/open-iconic)

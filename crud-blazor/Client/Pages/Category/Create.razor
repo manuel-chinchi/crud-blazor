@@ -2,14 +2,17 @@
 @inject HttpClient Http
 @inject NavigationManager Navigation 
  
-<h3>Create</h3>
+<h3>Create category</h3>
+<br />
 
 <EditForm Model="category" OnValidSubmit="CreateCategory">
     <div class="form-group">
         <label>Name</label>
         <InputText class="form-control" @bind-Value="category.Name"></InputText>
     </div>
-    <button type="submit" class="btn btn-success"><span class="oi oi-chevron-right mr-2"></span>Accept</button>
+    <br />
+    <a class="btn btn-secondary" href="categories"><span class="oi oi-chevron-left mr-2"></span>Back</a>
+    <button type="submit" class="btn btn-success"><span class="oi oi-check mr-2"></span>Accept</button>
 </EditForm>
 
 @code {

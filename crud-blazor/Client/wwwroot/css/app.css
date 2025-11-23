@@ -181,3 +181,8 @@ app {
         display: block;
     }
 }
+
+/*----- globals -----*/
+h3 {
+    margin:0;
+}

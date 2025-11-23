@@ -1,6 +1,6 @@
 ﻿<div class="btn-toolbar justify-content-between" role="toolbar">
     <div class="btn-group" role="group">
-        <a class="btn btn-primary" href="article-create"><span class="oi oi-plus mr-2"></span>@TextBtnAdd</a>
+        <a class="btn btn-primary" href="@UrlBtnAdd"><span class="oi oi-plus mr-2"></span>@TextBtnAdd</a>
     </div>
     <div class="btn-group" role="group">
         <div class="dropdown">
@@ -20,6 +20,7 @@
 @code {
     [Parameter] public string TextBtnAdd { get; set; } = "Add";
     [Parameter] public string TextBtnExport { get; set; } = "Export";
+    [Parameter] public string UrlBtnAdd { get; set; } = "";
 
     [Parameter] public EventCallback ExportToCSV { get; set; }
     [Parameter] public EventCallback ExportToExcel { get; set; }

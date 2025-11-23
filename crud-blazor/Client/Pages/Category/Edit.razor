@@ -2,13 +2,8 @@
 
 <h3>Edit category</h3>
 
-<EditForm Model="category">
-    <div class="form-group">
-        <label>Name</label>
-        <InputText class="form-control" @bind-Value="category.Name"></InputText>
-    </div>
-</EditForm>
+@*<CategoryForm OnValidSubmit="null" Category="@Category"/>*@
 
 @code {
-    public Category category { get; set; }
+    public Category Category { get; set; } = new Category();
 }

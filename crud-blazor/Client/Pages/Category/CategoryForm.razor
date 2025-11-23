@@ -1,0 +1,15 @@
+﻿<EditForm Model="Category" OnValidSubmit="OnValidSubmit">
+    <div class="form-group">
+        <label>Name</label>
+        <InputText class="form-control" @bind-Value="@Category.Name"></InputText>
+    </div>
+    <br />
+    <a class="btn btn-secondary" href="@UrlBtnBack"><span class="oi oi-chevron-left mr-2"></span>Back</a>
+    <button type="submit" class="btn btn-success"><span class="oi oi-check mr-2"></span>Accept</button>
+</EditForm>
+
+@code {
+    [Parameter] public Category Category { get; set; } = new Category();
+    [Parameter] public string UrlBtnBack { get; set; } = "categories";
+    [Parameter] public EventCallback OnValidSubmit { get; set; }
+}

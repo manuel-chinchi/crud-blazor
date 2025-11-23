@@ -1,0 +1,49 @@
+﻿<div class="btn-toolbar justify-content-between" role="toolbar">
+    <div class="btn-group" role="group">
+        <a class="btn btn-primary" href="@UrlBtnAdd"><span class="oi oi-plus mr-2"></span>@TextBtnAdd</a>
+    </div>
+    <div class="btn-group" role="group">
+        <div class="input-group mr-1">
+            <input type="text" class="form-control" placeholder="Search" @bind-value="SearchText" @onkeyup="InputKeyPress">
+            <div class="input-group-append">
+                <div class="input-group-text" id="btnGroupAddon2">
+                    <span class="oi oi-magnifying-glass pb-1"></span>
+                </div>
+            </div>
+        </div>
+        <div class="dropdown">
+            <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <span class="oi oi-data-transfer-download mr-2"></span>
+                @TextBtnExport
+            </button>
+            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenu2">
+                <button class="dropdown-item" type="button" @onclick="ExportToCSV">CSV</button>
+                <button class="dropdown-item" type="button" @onclick="ExportToExcel">Excel</button>
+                <button class="dropdown-item" type="button" @onclick="ExportToPDF">PDF</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+@code {
+    [Parameter] public string TextBtnAdd { get; set; } = "Add";
+    [Parameter] public string TextBtnExport { get; set; } = "Export";
+    [Parameter] public string UrlBtnAdd { get; set; } = "";
+
+    [Parameter] public EventCallback ExportToCSV { get; set; }
+    [Parameter] public EventCallback ExportToExcel { get; set; }
+    [Parameter] public EventCallback ExportToPDF { get; set; }
+
+    [Parameter] public string SearchText { get; set; } = string.Empty;
+    [Parameter] public EventCallback<string> OnSearchItem { get; set; }
+
+    private async Task InputKeyPress(KeyboardEventArgs e)
+    {
+        if (e.Key == "Enter")
+        {
+            await OnSearchItem.InvokeAsync(SearchText);
+        }
+    }
+}

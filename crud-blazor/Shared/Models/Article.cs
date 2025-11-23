@@ -11,5 +11,6 @@ namespace crud_blazor.Shared.Models
         public DateTime CreatedDate { get; set; }
         public DateTime? UpdatedDate { get; set; }
         public Category Category { get; set; }
+        public string CategoryId { get; set; }
     }
 }

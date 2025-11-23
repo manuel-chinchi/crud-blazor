@@ -7,8 +7,10 @@
 
 <h3>Articles</h3>
 <br />
-<TableToolbar TextBtnAdd="Create" TextBtnExport="Download At" 
-              ExportToCSV="ExportToCSV" ExportToExcel="ExportToExcel" ExportToPDF="ExportToPDF" UrlBtnAdd="article-create"/>
+<TableToolbar TextBtnAdd="Create" TextBtnExport="Download At"
+              SearchText="@searchText" OnSearchItem="SearchArticle"
+              ExportToCSV="ExportToCSV" ExportToExcel="ExportToExcel" ExportToPDF="ExportToPDF"
+              UrlBtnAdd="article-create" />
 <br />
 
 @if (articles == null)
@@ -46,6 +48,7 @@ else
 
 @code {
     Article[] articles;
+    private string searchText;
 
     protected override async Task OnInitializedAsync()
     {
@@ -85,6 +88,29 @@ else
             await Http.DeleteAsync($"Article/{id}");
             await LoadArticles();
         }
+    }
+
+    public async Task SearchArticle(string searchText)
+    {
+        if (!string.IsNullOrEmpty(searchText))
+        {
+            searchText = searchText.Trim().ToLower();
+
+            await LoadArticles();
+
+            searchText = searchText.Trim();
+            articles = articles
+                .Where
+                (a =>
+                    a.Name.ToLower().Contains(searchText) ||
+                    a.Category.Name.ToLower().Contains(searchText)
+                ).ToArray();
+        }
+        else
+        {
+            await LoadArticles();
+        }
+        await Task.CompletedTask;
     }
 
     async Task<string> GetTimeStamp()

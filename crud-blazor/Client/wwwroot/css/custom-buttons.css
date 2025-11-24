@@ -5,3 +5,7 @@
 button.swal2-confirm, button.swal2-cancel {
     display: inherit !important;
 }
+
+a.btn span.oi, button.btn span.oi {
+    top: 2px !important;
+}

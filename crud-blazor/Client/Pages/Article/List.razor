@@ -104,7 +104,7 @@ else
             searchText = searchText.Trim();
 
             articles = articles
-                .Where(a => string.IsNullOrEmpty(a.Name) == false).ToArray();
+                .Where(a => !string.IsNullOrEmpty(a.Name)).ToArray();
 
             articles = articles
                 .Where(a => 

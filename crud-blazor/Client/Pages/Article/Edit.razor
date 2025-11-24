@@ -5,10 +5,7 @@
 <h3>Edit article</h3>
 <br />
 
-@*<a class="btn btn-secondary" href="articles"><span class="oi oi-chevron-left mr-2"></span>Back</a>
-<div><br /></div>*@
-
-<ArticleForm Article="article" Categories="categories" OnValidSubmit="SaveArticle" />
+<ArticleForm Article="article" Categories="categories" OnValidSubmit="SaveArticle"/>
 
 @code {
     [Parameter] public int Id { get; set; }

@@ -1,0 +1,7 @@
+﻿button.btn, a.btn {
+    min-width: 100px;
+}
+
+button.swal2-confirm, button.swal2-cancel {
+    display: inherit !important;
+}

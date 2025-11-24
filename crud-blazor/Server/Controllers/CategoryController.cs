@@ -1,4 +1,6 @@
-﻿using crud_blazor.Shared.Models;
+﻿using crud_blazor.Server.Repositories;
+using crud_blazor.Server.Repositories.Contracts;
+using crud_blazor.Shared.Models;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -11,53 +13,52 @@ namespace crud_blazor.Server.Controllers
     [Route("[controller]")]
     public class CategoryController : ControllerBase
     {
-        public static List<Category> Categories { get; set; } = new List<Category>()
-            {
-                new Category() {Id=1, Name="c1", CreatedDate = new DateTime(1993,2,28)},
-                new Category() {Id=2, Name="c2", CreatedDate=new DateTime(1993,2,28)},
-                new Category() {Id=3, Name="c3", CreatedDate=new DateTime(1993,2,28)}
-            };
+        public readonly ICategoryRepository<Category> _categoryRepository;
 
         public CategoryController()
         {
+            _categoryRepository = new CategoryRepository();
         }
 
         [HttpGet]
         public IEnumerable<Category> Get()
         {
-            return Categories;
+            return _categoryRepository.GetCategories();
         }
 
         [HttpGet("{id}")]
         public Category Get(int id)
         {
-            return Categories.FirstOrDefault(c => c.Id == id);
+            return _categoryRepository.GetCategories().FirstOrDefault(c => c.Id == id);
         }
 
         [HttpPost]
         public void Post(Category category)
         {
-            if (Categories.Count == 0)
+            var categories = _categoryRepository.GetCategories();
+
+            if (categories.Count() == 0)
             {
                 category.Id = 1;
                 category.CreatedDate = DateTime.Now;
-                Categories.Add(category);
             }
             else
             {
-                category.Id = (Categories.Max(c => c.Id) + 1);
+                category.Id = (categories.Max(c => c.Id) + 1);
                 category.CreatedDate = DateTime.Now;
-                Categories.Add(category);
             }
+
+            _categoryRepository.AddCategory(category);
         }
 
         [HttpDelete("{id}")]
         public void Delete(int id)
         {
-            var c = Categories.FirstOrDefault(c => c.Id == id);
-            if (c != null)
+            var category = _categoryRepository.GetCategories().FirstOrDefault(c => c.Id == id);
+
+            if (category != null)
             {
-                Categories.Remove(c);
+                _categoryRepository.DeleteCategory(category.Id);
             }
         }
     }

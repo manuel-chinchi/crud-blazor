@@ -105,6 +105,7 @@ namespace crud_blazor.Server.Controllers
         [HttpPost("articles/pdf")]
         public FileContentResult ArticlesToPDF(Article[] articles)
         {
+            //TODO Si el Article.Name es vacio da error. Replicar revision para Category
             using (MemoryStream ms = new MemoryStream())
             {
                 PdfWriter writer = new PdfWriter(ms);

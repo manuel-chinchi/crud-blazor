@@ -7,9 +7,10 @@
 
 <h3>Categories</h3>
 <br />
-<TableToolbar TextBtnAdd="Create" TextBtnExport="Download At" 
+<TableToolbar TextBtnAdd="New" TextBtnExport="Download"
               SearchText="@searchText" OnSearchItem="SearchCategory"
-              ExportToCSV="ExportToCSV" ExportToExcel="ExportToExcel" ExportToPDF="ExportToPDF" UrlBtnAdd="category-create"/>
+              ExportToCSV="ExportToCSV" ExportToExcel="ExportToExcel" ExportToPDF="ExportToPDF" 
+              UrlBtnAdd="category-create" />
 <br />
 
 @if (categories == null)
@@ -69,13 +70,11 @@ else
             ConfirmButtonText = @"
                 <div style=""min-width: 75px;"">
                     <span style=""font-size: 18px; top: 2px;"" class='oi oi-check mr-2'></span>Yes
-                </div>
-            ",
+                </div>",
             CancelButtonText = @"
                 <div style=""min-width: 75px;"">
                     <span class='oi oi-x mr-2'></span>No
-                </div>
-            ",
+                </div>",
             ShowCancelButton = true
         });
 
@@ -93,6 +92,9 @@ else
             searchText = searchText.Trim().ToLower();
 
             await LoadCategories();
+
+            categories = categories
+                .Where(c => !string.IsNullOrEmpty(c.Name)).ToArray();
 
             categories = categories
                 .Where(c => c.Name.ToLower().Contains(searchText))

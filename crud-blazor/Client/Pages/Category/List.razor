@@ -95,6 +95,9 @@ else
             await LoadCategories();
 
             categories = categories
+                .Where(c => !string.IsNullOrEmpty(c.Name)).ToArray();
+
+            categories = categories
                 .Where(c => c.Name.ToLower().Contains(searchText))
                 .ToArray();
         }

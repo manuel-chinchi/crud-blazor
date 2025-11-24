@@ -73,13 +73,11 @@ else
             ConfirmButtonText = @"
                 <div style=""min-width: 75px;"">
                     <span style=""font-size: 18px; top: 2px;"" class='oi oi-check mr-2'></span>Yes
-                </div>
-            ",
+                </div>",
             CancelButtonText = @"
                 <div style=""min-width: 75px;"">
                     <span class='oi oi-x mr-2'></span>No
-                </div>
-            ",
+                </div>",
             ShowCancelButton = true
         });
 
@@ -88,6 +86,11 @@ else
             await Http.DeleteAsync($"Article/{id}");
             await LoadArticles();
         }
+    }
+
+    public void Print(string s)
+    {
+        Console.WriteLine(s);
     }
 
     public async Task SearchArticle(string searchText)
@@ -99,9 +102,12 @@ else
             await LoadArticles();
 
             searchText = searchText.Trim();
+
             articles = articles
-                .Where
-                (a =>
+                .Where(a => string.IsNullOrEmpty(a.Name) == false).ToArray();
+
+            articles = articles
+                .Where(a => 
                     a.Name.ToLower().Contains(searchText) ||
                     a.Category.Name.ToLower().Contains(searchText)
                 ).ToArray();
@@ -110,6 +116,7 @@ else
         {
             await LoadArticles();
         }
+
         await Task.CompletedTask;
     }
 
